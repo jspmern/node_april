@@ -1,0 +1,6 @@
+ //console.log(__dirname)
+//console.log(__filename)
+//let url= new URL('/foo',"https://google.com")
+//console.log(url)
+// let data=new Buffer('hello how are you')
+// console.log(data.toString())
