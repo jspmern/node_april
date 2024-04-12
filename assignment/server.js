@@ -85,9 +85,52 @@ let server = http.createServer((req, res) => {
 
         })
     }
+    //this is for the edit
+    else if (req.url == "/" && req.method == "PUT") {
+        let str = ''
+        req.on('data', (chunk) => {
+            str += chunk
+        })
+        req.on('end', () => {
+            let bodyData = JSON.parse(str)
+            fs.readFile(dbPath, 'utf-8', (err, data) => {
+                if (err) {
+                    res.writeHead(500, { "Content-Type": "text/plain" })
+                    res.end('somthing wrong while editing !')
+                }
+                else {
+                    let orignalData = JSON.parse(data)
+                    console.log(typeof orignalData,)
+                    console.log('bodydat',bodyData)
+                    let updataedData = orignalData.map((item) => {
+                        if (item.id == bodyData.id) {
+                            let newtext = bodyData.text
+                            return {
+                                ...item,
+                                text:newtext
+                            }
+                        }
+                        else {
+                            return item
+                        }
+                    })
+                    // console.log('ehllo i am updated',updataedData)
+                    fs.writeFile(dbPath, JSON.stringify(updataedData), (err) => {
+                        if (err) {
+                            res.writeHead(500, { "Content-Type": "text/plain" })
+                            res.end('somthing wrong while editing !')
+                        }
+                        else {
+                            res.end(JSON.stringify(updataedData))
+                        }
+                    })
+                }
+            })
+        })
+    }
 
 })
- 
+
 
 server.listen(8000, () => {
     console.log('server is up at 8000')
