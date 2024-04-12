@@ -43,6 +43,7 @@
                     }
                      let response= await fetch('http://localhost:8000',metaObject)
                      let result= await response.json()
+                     text.value=''
                       print(result)     
                  }
                  catch(err)
@@ -65,14 +66,33 @@
                     </div>
                     <div class="card-footer">
                         <button id="edit" class="btn btn-primary">edit</button>
-                        <button id="delete" class="btn btn-danger">delete</button>
+                        <button id="delete" class="btn btn-danger" onclick="deleteHandler(${item.id})">delete</button>
                     </div>
                 </div>
             </div>  `
              })
              body.innerHTML=str
         }
-    </script>
+     //this is for the delete handler
+    async function deleteHandler(id)
+     {
+        let object={
+            method:"DELETE",
+            body:JSON.stringify(id)
+        }
+        let response=await fetch('http://localhost:8000',object)
+        let result =await response.json()
+       if(result)
+       {
+        print(result)
+        alert("data deleted successful")
+       }
+       else{
+        alert('somthing wrong while deleting')
+        return
+       }
+     }
+   </script>
 </body>
 
 </html>
