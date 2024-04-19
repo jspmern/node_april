@@ -47,9 +47,33 @@
                 </nav>
             </div>
         </div>
+        <div class="row ">
+            <div class="col d-flex justify-content-between">
+               
+                    <input type="text" placeholder="search..." id="search"/>
+                
+              
+                <h1 >total Users <span id="total"></span></h1>
+            </div>
+        </div>
         <div class="row">
+           
             <div class="col">
-                <h1>Hello, world! i am all user  page</h1>
+                <h1>Hello, world! i am all user page</h1>
+                <hr />
+                <table class="table table-success table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">NAME</th>
+                            <th scope="col">EMAIL</th>
+                            <th scope="col" colspan="2"> ACTION </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        <!-- by javascript   -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -58,7 +82,60 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 
+    <script>
+        fetchingData()
+       
+        let tbody = document.getElementById('tbody')
+        let total = document.getElementById('total')
+        let search = document.getElementById('search')
+        //this is for searching functionality
+         search.addEventListener('keyup',async(e)=>{
+             //you have to hit api for searching
+              //and whatever data you are getting as a result that you have to send in print() function
+             
+               if(search.value)
+               {
+                let url=`http://localhost:8080/search?search=${search.value}`
+                let response= await fetch(url)
+                let {data,success}= await response.json()
+                print(data)
+               }
+               else{
+                console.log('fail')
+               }
+         })
+         //this is for printin dom
+        function print(item) {
 
+            let str = ''
+            item.map((data) => {
+                str += `  <tr>
+                        <th scope="row">${data.id}</th>
+                        <td>${data.text}</td>
+                        <td>${data.email}</td>
+                        <td><button class="btn btn-primary">edit</button></td>
+                        <td><button class="btn btn-danger">delete</button></td>
+                      </tr>`
+            })
+            tbody.innerHTML = str;
+            total.innerText=item.length
+        }
+        //this is for fetching the data
+        async function fetchingData() {
+            try {
+                let response = await fetch('http://localhost:8080/user')
+                let { data, success } = await response.json()
+                if (success) {
+                    console.log('testing')
+                    print(data)
+                }
+            }
+            catch (err) {
+                console.log(err)
+                return
+            }
+        }
+    </script>
 </body>
 
 </html>

@@ -63,4 +63,25 @@ let homeController=(req,res)=>{
           res.send({success:true,data:orignalData})
       } })
  }
- module.exports={homeController,aboutController,contactController,contactPostController,userController,allDataController}
+ let searchHandler=(req,res)=>{
+    let {search}=req.query
+   
+    let dbPath=path.join(__dirname,'../db/db.json')
+     //read the data
+     fs.readFile(dbPath,'utf-8',(err,data)=>{
+        if(err)
+        {
+        throw new Error('sonthing wrong in searching')
+        }
+        else{
+           let orignalData=JSON.parse(data)
+           console.log(orignalData)
+           console.log('search',search)
+           let updateData=orignalData.filter((item)=>{
+            return item.text.trim().toLowerCase().includes(search.trim().toLowerCase())
+           })
+            res.send({data:updateData,success:true})
+        }
+     })
+ }
+ module.exports={homeController,aboutController,contactController,contactPostController,userController,allDataController,searchHandler}

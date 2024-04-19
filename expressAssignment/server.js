@@ -1,7 +1,12 @@
 let express=require('express')
 let app=express();
 let route=require('./routes/route')
+let dotenv=require('dotenv')
 
+//env middlwate
+dotenv.config()
+let PORT=process.env.PORT || 5000
+ 
 //built in middlware
 app.use(express.json())
 app.use(express.static('public'))
@@ -19,6 +24,6 @@ app.use((err,req,res,next)=>{
 })
 
 //this is for the listen
-app.listen(8080,()=>{
-    console.log('connected')
+app.listen(PORT,()=>{
+    console.log(`server is connected at http://localhost:${PORT}`)
 })
