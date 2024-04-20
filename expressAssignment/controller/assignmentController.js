@@ -1,5 +1,6 @@
 let fs=require('fs')
 let path=require('path')
+const dbRead = require('../utilites/dbread')
 let homeController=(req,res)=>{
     let homePath=path.join(__dirname,'../public/index.html')
     res.status(200).sendFile(homePath)
@@ -75,8 +76,6 @@ let homeController=(req,res)=>{
         }
         else{
            let orignalData=JSON.parse(data)
-           console.log(orignalData)
-           console.log('search',search)
            let updateData=orignalData.filter((item)=>{
             return item.text.trim().toLowerCase().includes(search.trim().toLowerCase())
            })
@@ -84,4 +83,34 @@ let homeController=(req,res)=>{
         }
      })
  }
- module.exports={homeController,aboutController,contactController,contactPostController,userController,allDataController,searchHandler}
+ let filterRouteHandler=async(req,res)=>{
+    let dbPath=path.join(__dirname,'../db/db.json')
+    let {sort}=req.body 
+     fs.readFile(dbPath,'utf-8',(err,data)=>{
+        if(err)
+        {
+            throw new Error('somthing wrong')
+        }
+        else{
+            let orignalData=JSON.parse(data)
+            function sorting(a, b) {
+                if (sort == "A_Z") {
+                    return a.text.localeCompare(b.text)
+                }
+                else if (sort == "Z_A") {
+                        return b.text.localeCompare(a.text)
+                 }
+                else if (sort == "1_10") {
+                    return a.id - b.id
+                }
+                else {
+                    return b.id - a.id
+    
+                }
+            }
+            orignalData.sort(sorting)
+            res.send(orignalData)
+        }
+     })
+ }
+ module.exports={homeController,aboutController,contactController,contactPostController,userController,allDataController,searchHandler,filterRouteHandler}

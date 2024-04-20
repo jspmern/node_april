@@ -52,7 +52,15 @@
                
                     <input type="text" placeholder="search..." id="search"/>
                 
-              
+                   <select id="sorting" class="p-2">
+                    <option value="A_Z">A_Z</option>
+                    <option disabled></option>
+                    <option value="Z_A">Z_A</option>
+                    <option disabled></option>
+                    <option value="1_10">1_10</option>
+                    <option disabled></option>
+                    <option value="10_1">10_1</option>
+                   </select>
                 <h1 >total Users <span id="total"></span></h1>
             </div>
         </div>
@@ -88,17 +96,33 @@
         let tbody = document.getElementById('tbody')
         let total = document.getElementById('total')
         let search = document.getElementById('search')
+        let sorting =document.getElementById('sorting')
+        let id
+        //this is for sorting
+        sorting.addEventListener('change',async()=>{
+           let response= await   fetch('http://localhost:8080/filter',{
+                method:"POST",
+                "Content-Type":"application/json",
+                  body:JSON.stringify({sort:sorting.value})
+              })
+              let data= await response.json()
+              console.log(data)
+              print(data)
+        })
         //this is for searching functionality
          search.addEventListener('keyup',async(e)=>{
              //you have to hit api for searching
               //and whatever data you are getting as a result that you have to send in print() function
-             
+              let url=`http://localhost:8080/search?search=${search.value}`
                if(search.value)
                {
-                let url=`http://localhost:8080/search?search=${search.value}`
+                clearTimeout(id)
+                id= setTimeout(async() => {
                 let response= await fetch(url)
                 let {data,success}= await response.json()
-                print(data)
+                print(data)   
+                }, 1000);
+                
                }
                else{
                 console.log('fail')
