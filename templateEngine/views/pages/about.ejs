@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../partials/head') %>
+</head>
+<body>
+    
+    <%- include('../partials/nav') %> 
+      <main>
+        this is my about
+        <% if(login) { %>
+            <h1>hello i am login </h1>
+         <% }%>
+         
+      </main>
+      <%- include('../partials/footer') %>
+</body>
+</html>
